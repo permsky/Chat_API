@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 
 class User(models.Model):
@@ -8,6 +9,7 @@ class User(models.Model):
         unique=True
     )
     created_at = models.DateTimeField(
+        default=timezone.now,
         verbose_name='Дата и время создания пользователя'
     )
 
@@ -27,6 +29,7 @@ class Chat(models.Model):
     )
     users = models.ManyToManyField(User, verbose_name='Пользователи в чате')
     created_at = models.DateTimeField(
+        default=timezone.now,
         verbose_name='Дата и время создания чата'
     )
 
@@ -54,6 +57,7 @@ class Message(models.Model):
         verbose_name='Текст сообщения'
     )
     created_at = models.DateTimeField(
+        default=timezone.now,
         verbose_name='Дата и время создания сообщения'
     )
 
