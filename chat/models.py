@@ -18,7 +18,7 @@ class User(models.Model):
         verbose_name = 'Пользователь'
     
     def __str__(self):
-        return f'Пользователь {self.username}'
+        return f'{self.username}'
 
 
 class Chat(models.Model):
