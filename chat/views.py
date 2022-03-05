@@ -32,12 +32,16 @@ class CreateMessageAPIView(generics.CreateAPIView):
     serializer_class = MessageSerializer
 
     def post(self,request):
-        message = Message.objects.create(
-            chat=Chat.objects.get(id=self.request.data.get('chat')),
-            author=User.objects.get(id=self.request.data.get('author')),
-            text=self.request.data.get('text')
-        )
-        return Response({'id': message.id})
+        chat=Chat.objects.get(id=self.request.data.get('chat'))
+        author=User.objects.get(id=self.request.data.get('author'))
+        if author.id in chat.users.all():
+            message = Message.objects.create(
+                chat=chat,
+                author=author,
+                text=self.request.data.get('text')
+            )
+            return Response({'id': message.id})
+        return Response({'error': 'User not match chat'})
 
 
 class GetChatsAPIView(generics.ListAPIView):
