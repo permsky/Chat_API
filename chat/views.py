@@ -40,12 +40,21 @@ class CreateMessageAPIView(generics.CreateAPIView):
         return Response({'id': message.id})
 
 
-class GetChatsAPIView(generics.ListCreateAPIView):
+class GetChatsAPIView(generics.ListAPIView):
     serializer_class = ChatSerializer
 
     def get_queryset(self):
         user_id = self.request.data.get('user')
-        return Chat.objects.filter(users__id=user_id).order_by('-created_at')
+        chats = Chat.objects.filter(users__id=user_id)
+        chat_ids = chats.order_by('-message__created_at').values('id')
+        unique_chat_ids = list()
+        for number, chat_id in enumerate(chat_ids):
+            if chat_ids[number] not in unique_chat_ids:
+                unique_chat_ids.append(chat_ids[number]) 
+        chats = list()
+        for chat_id in unique_chat_ids:
+            chats.append(Chat.objects.get(id=chat_id['id']))
+        return chats
 
     def post(self,request):
         chats = self.get_queryset()
