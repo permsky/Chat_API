@@ -41,7 +41,12 @@ class CreateMessageAPIView(generics.CreateAPIView):
                 text=self.request.data.get('text')
             )
             return Response({'id': message.id})
-        return Response({'error': 'User not match chat'})
+        return Response(
+            {
+                'status_code': '403',
+                'detail': 'User not match chat'
+            }
+        )
 
 
 class GetChatsAPIView(generics.ListAPIView):
